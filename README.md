@@ -735,3 +735,31 @@ Please read the [docs/conventions.txt](docs/conventions.txt) file to get a bette
 Please read [docs/commands.txt](docs/commands.txt) file to see what commands you can use to save you time on writing boilerplate code and just executing certain actions without remembering the specific commands.
 
 <br/>
+
+
+## Note
+```
+yarn gen User
+yarn gen User -a V1Create
+yarn gen User -a V1List
+```
+
+```
+update model.js in User
+yarn model
+rename migrate file e.g. `20250421074307-create-User-model`
+define the schema in the migration file
+yarn migrate
+```
+
+```
+curl http://localhost:8000/v1/users/list
+
+$headers = @{
+    "Content-Type" = "application/json"
+}
+
+$body = '{"fullName":"jia","phone":"0912345678"}'
+
+Invoke-WebRequest -Uri "http://localhost:8000/v1/users/create" -Method POST -Headers $headers -Body $body -ContentType "application/json"
+```
