@@ -6,7 +6,7 @@ node_modules/*
 
 # config
 config/.env.dev
-config/.env.development
+#config/.env.development
 config/.env.prod
 config/.env.production
 config/.env.staging
