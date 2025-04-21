@@ -52,7 +52,7 @@ async function server() {
 
   // create server and initiate socket.io
   const newServer = http.createServer(app);
-  const io = await socket.get(newServer); // socket.io
+  // const io = await socket.get(newServer); // socket.io
 
   // enable ssl redirect in production
   app.use(sslRedirect.default()); // must be .default()
@@ -137,7 +137,7 @@ async function server() {
   app.use(error);
 
   // io connection, call socket.connect
-  io.on('connection', socket.connect);
+  // io.on('connection', socket.connect);
 
   // return newServer
   return newServer;
