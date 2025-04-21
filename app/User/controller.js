@@ -13,7 +13,9 @@ const { errorResponse, ERROR_CODES } = require('../../services/error');
 const actions = require('./actions');
 
 module.exports = {
-  V1Example
+  V1Example,
+  V1Create,
+  V1List,
 }
 
 /**
@@ -45,4 +47,28 @@ async function V1Example(req, res, next) {
   } catch (error) {
     return next(error);
   }
-} // END V1Example 
+} // END V1Example
+
+async function V1Create(req, res, next) {
+  let method = 'V1Create';
+
+  try {
+    const result = await actions[method](req, res);
+
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return next(error);
+  }
+} // END V1Create
+
+async function V1List(req, res, next) {
+  let method = 'V1List';
+
+  try {
+    const result = await actions[method](req, res);
+
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return next(error);
+  }
+} // END V1List

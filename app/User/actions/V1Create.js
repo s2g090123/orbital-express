@@ -78,52 +78,28 @@ module.exports = {
  * TODO: This is a todo
  */
 async function V1Create(req, res) {
-  const i18n = lang.getLocalI18n(); // get local i18n object - remember to set the locale based on the user e.g. i18n.setLocale(user.locale);
-
   const schema = joi.object({
-    alpha: joi.string().trim().min(1).lowercase().required().error(new Error(req.__('USER_V1Create_Invalid_Argument[alpha]'))),
-    beta: joi.boolean().default(true).optional().error(new Error(req.__('USER_V1Create_Invalid_Argument[beta]'))),
-    charlie: joi.number().integer().min(1).max(10).error(new Error(req.__('USER_V1Create_Invalid_Argument[charlie]'))),
-    delta: joi.string().trim().lowercase().min(3).email().required().error(new Error(req.__('USER_V1Create_Invalid_Argument[delta]'))),
-    gamma: joi.string().when(joi.ref('$admin'), { // if admin exists on req.admin, then gamma is optional, otherwise it is required
-      is: joi.exist(),
-      then: joi.optional(),
-      otherwise: joi.required(),
-    }).error(new Error(req.__('USER_V1Create_Invalid_Argument[gamma]'))),
-    zeta: joi.string().trim().valid('a', 'b').required().error(new Error(req.__('USER_V1Create_Invalid_Argument[zeta]')))
-  }).with('alpha', 'beta') // must come together
-    .xor('beta', 'gamma') // one and not the other must exists
-    .or('gamma', 'delta'); // at least one must exists
+    fullName: joi.string().trim().min(1).required(),
+    phone: joi.string().trim().min(1).required(),
+  });
 
   // validate
-  const { error, value } = schema.validate(req.args, { context: req }); // have { context: req } here so in joi we can check if admin exists on req.admin above
+  const { error, value } = schema.validate(req.args);
   if (error)
     return errorResponse(req, ERROR_CODES.BAD_REQUEST_INVALID_ARGUMENTS, joiErrorsMessage(error));
   req.args = value; // arguments are updated and variable types are converted to correct type. ex. '5' -> 5, 'true' -> true
 
   /***** DO WORK HERE *****/
   try {
-    // assemble data
-    const data = { key: 'value' };
+    const newUser = await models.User.create({
+        fullName: req.args.fullName,
+        phone: req.args.phone
+    });
 
-    // ADD BACKGROUND JOB TO QUEUE
-    const UserQueue = queue.get('UserQueue'); // grab relevent queue
-    const job = await UserQueue.add('V1CreateTask', data); // add new job to queue
-
-    // language translation - key should follow this format, FEATURE_FOLDER_NAME[snake_case_details]. UPPERCASE feature folder followed by snake case details of key
-    // const message = req.__('USER[put_new_message_key]', { email: 'bob@example.com' });
-
-    // SOCKET EMIT EVENT
-    // const io = await socket.get(); // get socket.io instance
-    // io.to(`${SOCKET_ROOMS.GLOBAL}`).emit(SOCKET_EVENTS.EXAMPLE_EVENT, data);
-    // io.to(`${SOCKET_ROOMS.ADMIN}${EXAMPLE_ADMIN_ID}`).emit(SOCKET_EVENTS.EXAMPLE_EVENT, data);
-
-    // return response - this will be wrapped around in a "resolve" promise automatically because this is an async function
     return {
       status: 200,
       success: true,
-      jobId: job.id,
-      data: data
+      user: newUser,
     };
   } catch (error) {
     // this will be wrapped around in a "reject" promise automatically because this is an async function
