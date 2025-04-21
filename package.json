@@ -15,7 +15,7 @@
     "postinstall": "yarn lang",
     "start": "./node_modules/foreman/nf.js start",
     "s": "yarn start:dev",
-    "start:dev": "yarn lang && ./node_modules/nodemon/bin/nodemon.js --ignore locales/ --exec \"./node_modules/foreman/nf.js --env ./config/.env.development start web=1\"",
+    "start:dev": "yarn lang && npx nodemon --ignore locales/ --exec \"npx nf --env config/.env.development start web=1\"",
     "w": "yarn worker",
     "worker": "yarn lang && ./node_modules/nodemon/bin/nodemon.js --ignore locales/ --exec \"./node_modules/foreman/nf.js --env ./config/.env.development start worker=1\"",
     "mg": "yarn migrate",
