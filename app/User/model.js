@@ -10,72 +10,18 @@
 const constants = require('../../helpers/constants');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
+  const User = sequelize.define('User', {
 
     // All foreign keys are added in associations
 
-    example1: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    },
-
-    example2: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-      validate: {
-        isInt: true
-      }
-    },
-
-    example3: {
-      type: DataTypes.DECIMAL(4, 2),
-      allowNull: false,
-      defaultValue: 0.00,
-      validate: {
-        isDecimal: true
-      },
-      get() {
-        // convert string to float
-        const rawValue = this.getDataValue(example3);
-        // must check because if allowNull is TRUE, because it might return 0 but should instead return NULL
-        return (rawValue === null ? rawValue : Number(rawValue));
-      }
-    },
-
-    example4: {
+    fullName: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 'foo'
     },
-
-    example5: {
-      type: DataTypes.ENUM(constants.someList),
-      allowNull: true,
-      defaultValue: null
-    },
-
-    example6: {
-      type: DataTypes.DATE,
+    phone: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // now
-      validate: {
-        isDate: true
-      }
     },
-
-    example7: {
-      type: DataTypes.JSONB,
-      allowNull: true,
-      defaultValue: null
-    },
-
-    example8: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-      defaultValue: null
-    }
   }, {
     timestamps: true, // allows sequelize to create timestamps automatically
 
@@ -87,18 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {},
     indexes: []
   });
-
-  // association
-  User.associate = models => {
-    // User belongs to <OtherModelName>
-    User.belongsTo(models.otherModelName, {
-      as: 'user',
-      foreignKey: {
-        name: 'otherModelId',
-        allowNull: false,
-      },
-    });
-  }
 
   return User;
 }
